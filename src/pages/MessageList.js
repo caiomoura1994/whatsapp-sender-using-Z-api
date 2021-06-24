@@ -5,14 +5,14 @@ import {
   Grid,
   Pagination
 } from '@material-ui/core';
-import ProductListToolbar from 'src/components/product/ProductListToolbar';
-import ProductCard from 'src/components/product//ProductCard';
+import MessageListToolbar from 'src/components/messages/MessageListToolbar';
+import MessageCard from 'src/components/messages/MessageCard';
 import products from 'src/__mocks__/products';
 
 const ProductList = () => (
   <>
     <Helmet>
-      <title>Products | Zeki</title>
+      <title>Mensagens | Zeki</title>
     </Helmet>
     <Box
       sx={{
@@ -22,7 +22,7 @@ const ProductList = () => (
       }}
     >
       <Container maxWidth={false}>
-        <ProductListToolbar />
+        <MessageListToolbar />
         <Box sx={{ pt: 3 }}>
           <Grid
             container
@@ -36,7 +36,7 @@ const ProductList = () => (
                 md={6}
                 xs={12}
               >
-                <ProductCard product={product} />
+                <MessageCard message={product} />
               </Grid>
             ))}
           </Grid>

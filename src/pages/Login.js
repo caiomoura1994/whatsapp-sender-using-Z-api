@@ -20,7 +20,7 @@ const Login = () => {
   return (
     <>
       <Helmet>
-        <title>Login | Material Kit</title>
+        <title>Login | Zeki</title>
       </Helmet>
       <Box
         sx={{
@@ -31,7 +31,7 @@ const Login = () => {
           justifyContent: 'center'
         }}
       >
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" sx={{ height: '100vh' }} center>
           <Formik
             initialValues={{
               email: 'demo@devias.io',

@@ -7,6 +7,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Login from 'src/pages/Login';
 import NotFound from 'src/pages/NotFound';
 import ProductList from 'src/pages/ProductList';
+import MessageList from 'src/pages/MessageList';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 
@@ -18,6 +19,7 @@ const routes = [
       { path: 'account', element: <Account /> },
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
+      { path: 'messages', element: <MessageList /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
       { path: '*', element: <Navigate to="/404" /> }

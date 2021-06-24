@@ -5,18 +5,18 @@ import {
   Grid
 } from '@material-ui/core';
 import Budget from 'src/components/dashboard//Budget';
-import LatestOrders from 'src/components/dashboard//LatestOrders';
-import LatestProducts from 'src/components/dashboard//LatestProducts';
-import Sales from 'src/components/dashboard//Sales';
+// import LatestOrders from 'src/components/dashboard//LatestOrders';
+// import LatestProducts from 'src/components/dashboard//LatestProducts';
+// import Sales from 'src/components/dashboard//Sales';
 import TasksProgress from 'src/components/dashboard//TasksProgress';
 import TotalCustomers from 'src/components/dashboard//TotalCustomers';
 import TotalProfit from 'src/components/dashboard//TotalProfit';
-import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
+// import TrafficByDevice from 'src/components/dashboard//TrafficByDevice';
 
 const Dashboard = () => (
   <>
     <Helmet>
-      <title>Dashboard | Material Kit</title>
+      <title>Dashboard | Zeki</title>
     </Helmet>
     <Box
       sx={{
@@ -66,7 +66,7 @@ const Dashboard = () => (
           >
             <TotalProfit sx={{ height: '100%' }} />
           </Grid>
-          <Grid
+          {/* <Grid
             item
             lg={8}
             md={12}
@@ -74,8 +74,8 @@ const Dashboard = () => (
             xs={12}
           >
             <Sales />
-          </Grid>
-          <Grid
+          </Grid> */}
+          {/* <Grid
             item
             lg={4}
             md={6}
@@ -83,8 +83,8 @@ const Dashboard = () => (
             xs={12}
           >
             <TrafficByDevice sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
+          </Grid> */}
+          {/* <Grid
             item
             lg={4}
             md={6}
@@ -92,8 +92,8 @@ const Dashboard = () => (
             xs={12}
           >
             <LatestProducts sx={{ height: '100%' }} />
-          </Grid>
-          <Grid
+          </Grid> */}
+          {/* <Grid
             item
             lg={8}
             md={12}
@@ -101,7 +101,7 @@ const Dashboard = () => (
             xs={12}
           >
             <LatestOrders />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>

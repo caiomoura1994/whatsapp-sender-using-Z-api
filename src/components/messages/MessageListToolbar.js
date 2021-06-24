@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
 
-const CustomerListToolbar = (props) => (
+const MessageListToolbar = (props) => (
   <Box {...props}>
     <Box
       sx={{
@@ -17,17 +17,11 @@ const CustomerListToolbar = (props) => (
         justifyContent: 'flex-end'
       }}
     >
-      <Button>
-        Importar
-      </Button>
-      <Button sx={{ mx: 1 }}>
-        Exportar
-      </Button>
       <Button
         color="primary"
         variant="contained"
       >
-        Adicionar Contato
+        Criar Mensagem
       </Button>
     </Box>
     <Box sx={{ mt: 3 }}>
@@ -48,7 +42,7 @@ const CustomerListToolbar = (props) => (
                   </InputAdornment>
                 )
               }}
-              placeholder="Pesquisar contato"
+              placeholder="Pesquisar mensagem"
               variant="outlined"
             />
           </Box>
@@ -58,4 +52,4 @@ const CustomerListToolbar = (props) => (
   </Box>
 );
 
-export default CustomerListToolbar;
+export default MessageListToolbar;
