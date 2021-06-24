@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import {
   AppBar,
@@ -10,10 +10,12 @@ import {
 } from '@material-ui/core';
 import NotificationsIcon from '@material-ui/icons/NotificationsOutlined';
 import InputIcon from '@material-ui/icons/Input';
+import { auth } from 'src/services/firebase';
 import Logo from './Logo';
 
 const DashboardNavbar = (props) => {
   const [notifications] = useState([]);
+  const navigate = useNavigate();
 
   return (
     <AppBar
@@ -34,7 +36,13 @@ const DashboardNavbar = (props) => {
             <NotificationsIcon />
           </Badge>
         </IconButton>
-        <IconButton color="inherit">
+        <IconButton
+          onClick={async () => {
+            await auth.signOut();
+            navigate('/');
+          }}
+          color="inherit"
+        >
           <InputIcon />
         </IconButton>
       </Toolbar>

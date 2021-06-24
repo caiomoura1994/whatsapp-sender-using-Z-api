@@ -30,7 +30,7 @@ const Register = () => {
           justifyContent: 'center'
         }}
       >
-        <Container maxWidth="sm">
+        <Container maxWidth="sm" sx={{ height: '100vh' }}>
           <Formik
             initialValues={{
               email: '',

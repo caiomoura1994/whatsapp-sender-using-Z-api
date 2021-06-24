@@ -13,9 +13,16 @@ import {
 } from '@material-ui/core';
 import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
+import { auth, firebaseInstance } from 'src/services/firebase';
 
 const Login = () => {
   const navigate = useNavigate();
+
+  const signInWithGoogle = async () => {
+    const provider = new firebaseInstance.auth.GoogleAuthProvider();
+    await auth.signInWithPopup(provider);
+    navigate('/app/dashboard', { replace: true });
+  };
 
   return (
     <>
@@ -60,14 +67,14 @@ const Login = () => {
                     color="textPrimary"
                     variant="h2"
                   >
-                    Sign in
+                    Login
                   </Typography>
                   <Typography
                     color="textSecondary"
                     gutterBottom
                     variant="body2"
                   >
-                    Sign in on the internal platform
+                    Bem vindo ao Zeki
                   </Typography>
                 </Box>
                 <Grid
@@ -87,7 +94,7 @@ const Login = () => {
                       size="large"
                       variant="contained"
                     >
-                      Login with Facebook
+                      Entrar com Facebook
                     </Button>
                   </Grid>
                   <Grid
@@ -98,11 +105,11 @@ const Login = () => {
                     <Button
                       fullWidth
                       startIcon={<GoogleIcon />}
-                      onClick={handleSubmit}
+                      onClick={signInWithGoogle}
                       size="large"
                       variant="contained"
                     >
-                      Login with Google
+                      Entrar com Google
                     </Button>
                   </Grid>
                 </Grid>
@@ -117,7 +124,7 @@ const Login = () => {
                     color="textSecondary"
                     variant="body1"
                   >
-                    or login with email address
+                    Ou entre com email
                   </Typography>
                 </Box>
                 <TextField
@@ -155,21 +162,21 @@ const Login = () => {
                     type="submit"
                     variant="contained"
                   >
-                    Sign in now
+                    Entrar
                   </Button>
                 </Box>
                 <Typography
                   color="textSecondary"
                   variant="body1"
                 >
-                  Don&apos;t have an account?
+                  Não tem conta ?
                   {' '}
                   <Link
                     component={RouterLink}
                     to="/register"
                     variant="h6"
                   >
-                    Sign up
+                    Cadastre-se
                   </Link>
                 </Typography>
               </form>

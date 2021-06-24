@@ -11,7 +11,7 @@ import MessageList from 'src/pages/MessageList';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
 
-const routes = [
+const routes = (redirectRoot) => [
   {
     path: 'app',
     element: <DashboardLayout />,
@@ -20,6 +20,7 @@ const routes = [
       { path: 'customers', element: <CustomerList /> },
       { path: 'dashboard', element: <Dashboard /> },
       { path: 'messages', element: <MessageList /> },
+      { path: 'bot', element: <MessageList /> },
       { path: 'products', element: <ProductList /> },
       { path: 'settings', element: <Settings /> },
       { path: '*', element: <Navigate to="/404" /> }
@@ -32,7 +33,7 @@ const routes = [
       { path: 'login', element: <Login /> },
       { path: 'register', element: <Register /> },
       { path: '404', element: <NotFound /> },
-      { path: '/', element: <Navigate to="/app/dashboard" /> },
+      { path: '/', element: <Navigate to={redirectRoot} /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
   }

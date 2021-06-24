@@ -81,19 +81,13 @@ const CustomerListResults = ({ customers, ...rest }) => {
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Nome
                 </TableCell>
                 <TableCell>
-                  Email
+                  Telefone
                 </TableCell>
                 <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Registration date
+                  Data de cadastro
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -131,12 +125,6 @@ const CustomerListResults = ({ customers, ...rest }) => {
                         {customer.name}
                       </Typography>
                     </Box>
-                  </TableCell>
-                  <TableCell>
-                    {customer.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
                   </TableCell>
                   <TableCell>
                     {customer.phone}

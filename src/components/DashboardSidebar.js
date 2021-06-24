@@ -18,6 +18,7 @@ import {
   User as UserIcon,
   // UserPlus as UserPlusIcon,
   Send as SendIcon,
+  Power as PowerIcon,
   Users as UsersIcon
 } from 'react-feather';
 import NavItem from './NavItem';
@@ -33,6 +34,11 @@ const items = [
     href: '/app/dashboard',
     icon: BarChartIcon,
     title: 'Visão geral'
+  },
+  {
+    href: '/app/bot',
+    icon: PowerIcon,
+    title: 'Bot'
   },
   {
     href: '/app/customers',
