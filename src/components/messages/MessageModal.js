@@ -1,4 +1,5 @@
 import * as React from 'react';
+import moment from 'moment';
 import PropTypes from 'prop-types';
 import Backdrop from '@material-ui/core/Backdrop';
 import Modal from '@material-ui/core/Modal';
@@ -27,12 +28,12 @@ const style = {
 };
 
 function MessageModal(props) {
-  const { setOpen, isOpened } = props;
+  const { setOpen, isOpened, submitFunction } = props;
   const handleClose = () => setOpen(false);
   const [values, setValues] = useState({
-    title: 'Katarina',
-    message: '71988362338',
-    datetime: '2017-05-24T10:30',
+    title: '',
+    message: '',
+    datetime: moment().format('yyyy-MM-DDThh:mm'),
   });
 
   const handleChange = (event) => {
@@ -75,7 +76,7 @@ function MessageModal(props) {
                   <Grid item container>
                     <TextField
                       fullWidth
-                      label="Nome"
+                      label="Título"
                       name="title"
                       onChange={handleChange}
                       required
@@ -120,7 +121,12 @@ function MessageModal(props) {
                 <Button
                   color="primary"
                   variant="contained"
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    if (!values.datetime || !values.message || !values.title) {
+                      return;
+                    }
+                    submitFunction(values);
+                  }}
                 >
                   Salvar
                 </Button>
@@ -135,6 +141,7 @@ function MessageModal(props) {
 
 MessageModal.propTypes = {
   setOpen: PropTypes.func,
+  submitFunction: PropTypes.func,
   isOpened: PropTypes.bool
 };
 

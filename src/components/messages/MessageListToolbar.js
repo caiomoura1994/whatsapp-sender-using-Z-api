@@ -2,20 +2,34 @@ import * as React from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon
 } from '@material-ui/core';
-import { Search as SearchIcon } from 'react-feather';
+import { useAuthState } from 'react-firebase-hooks/auth';
+
+import { auth, firebaseInstance, firestore } from 'src/services/firebase';
 import MessageModal from './MessageModal';
 
 const MessageListToolbar = (props) => {
   const [isOpened, setOpen] = React.useState(false);
+  const [user] = useAuthState(auth);
+
+  const createNewMessage = async ({
+    title,
+    message,
+    datetime
+  }) => {
+    const messagesRef = firestore.collection(`users/${user.uid}/messages`);
+    await messagesRef.add({
+      message,
+      createdAt: firebaseInstance.firestore.FieldValue.serverTimestamp(),
+      title,
+      datetime
+    });
+    setOpen(false);
+  };
+
   return (
     <>
-      <MessageModal isOpened={isOpened} setOpen={setOpen} />
+      <MessageModal submitFunction={createNewMessage} isOpened={isOpened} setOpen={setOpen} />
       <Box {...props}>
         <Box
           sx={{
@@ -30,31 +44,6 @@ const MessageListToolbar = (props) => {
           >
             Criar Mensagem
           </Button>
-        </Box>
-        <Box sx={{ mt: 3 }}>
-          <Card>
-            <CardContent>
-              <Box sx={{ maxWidth: 500 }}>
-                <TextField
-                  fullWidth
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <SvgIcon
-                          fontSize="small"
-                          color="action"
-                        >
-                          <SearchIcon />
-                        </SvgIcon>
-                      </InputAdornment>
-                    )
-                  }}
-                  placeholder="Pesquisar mensagem"
-                  variant="outlined"
-                />
-              </Box>
-            </CardContent>
-          </Card>
         </Box>
       </Box>
     </>

@@ -10,76 +10,80 @@ import {
 } from '@material-ui/core';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import DeleteIcon from '@material-ui/icons/Delete';
-import EditIcon from '@material-ui/icons/Edit';
+import moment from 'moment';
+import { firestore } from 'src/services/firebase';
 
-const MessageCard = ({ message, ...rest }) => (
-  <Card
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%'
-    }}
-    {...rest}
-  >
-    <CardContent>
-      <Typography
-        align="center"
-        color="textPrimary"
-        gutterBottom
-        variant="h4"
-      >
-        Titulo
-      </Typography>
-      <Typography
-        align="center"
-        color="textPrimary"
-        variant="body1"
-      >
-        Minha msg em massa ê ....Minha msg em massa ê ....Minha msg em massa ê ....
-      </Typography>
-    </CardContent>
-    <Box sx={{ flexGrow: 1 }} />
-    <Divider />
-    <Box sx={{ p: 2 }}>
-      <Grid
-        container
-        spacing={2}
-        sx={{ justifyContent: 'space-between' }}
-      >
-        <Grid
-          item
-          sx={{
-            alignItems: 'center',
-            display: 'flex'
-          }}
+const MessageCard = ({ message, messagePath, ...rest }) => {
+  const removeMessage = async () => {
+    console.log(`${messagePath}/${message.id}`);
+    await firestore.doc(`${messagePath}/${message.id}`).delete();
+  };
+
+  return (
+    <Card
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%'
+      }}
+      {...rest}
+    >
+      <CardContent>
+        <Typography
+          align="center"
+          color="textPrimary"
+          gutterBottom
+          variant="h4"
         >
-          <IconButton aria-label="delete">
-            <AccessTimeIcon color="action" />
-          </IconButton>
-          <Typography
-            color="textSecondary"
-            variant="body2"
+          {message.title}
+        </Typography>
+        <Typography
+          align="center"
+          color="textPrimary"
+          variant="body1"
+        >
+          {message.message}
+        </Typography>
+      </CardContent>
+      <Box sx={{ flexGrow: 1 }} />
+      <Divider />
+      <Box sx={{ p: 2 }}>
+        <Grid
+          container
+          spacing={2}
+          sx={{ justifyContent: 'space-between' }}
+        >
+          <Grid
+            item
+            sx={{
+              alignItems: 'center',
+              display: 'flex'
+            }}
           >
-            05/11/2021 às 00:15
-          </Typography>
+            <IconButton aria-label="delete">
+              <AccessTimeIcon color="action" />
+            </IconButton>
+            <Typography
+              color="textSecondary"
+              variant="body2"
+            >
+              {moment(message.datetime).format('DD/MM/yyyy às HH:mm')}
+            </Typography>
+          </Grid>
+          <Grid item>
+            <IconButton onClick={removeMessage} aria-label="delete">
+              <DeleteIcon color="action" />
+            </IconButton>
+          </Grid>
         </Grid>
-        <Grid item>
-          <IconButton aria-label="delete">
-            <EditIcon color="action" />
-          </IconButton>
-        </Grid>
-        <Grid item>
-          <IconButton aria-label="delete">
-            <DeleteIcon color="action" />
-          </IconButton>
-        </Grid>
-      </Grid>
-    </Box>
-  </Card>
-);
+      </Box>
+    </Card>
+  );
+};
 
 MessageCard.propTypes = {
-  message: PropTypes.object.isRequired
+  message: PropTypes.object.isRequired,
+  messagePath: PropTypes.string
 };
 
 export default MessageCard;

@@ -13,7 +13,7 @@ import {
   // AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
   // Lock as LockIcon,
-  Settings as SettingsIcon,
+  // Settings as SettingsIcon,
   // ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   // UserPlus as UserPlusIcon,
@@ -21,19 +21,21 @@ import {
   Power as PowerIcon,
   Users as UsersIcon
 } from 'react-feather';
-import NavItem from './NavItem';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-const user = {
-  avatar: 'https://avatars.githubusercontent.com/u/9389139?v=4',
-  jobTitle: 'Plano PRO',
-  name: 'Caio Moura'
-};
+import { auth } from 'src/services/firebase';
+import NavItem from './NavItem';
 
 const items = [
   {
     href: '/app/dashboard',
     icon: BarChartIcon,
     title: 'Visão geral'
+  },
+  {
+    href: '/app/account',
+    icon: UserIcon,
+    title: 'Minha Conta'
   },
   {
     href: '/app/bot',
@@ -50,16 +52,11 @@ const items = [
   //   icon: ShoppingBagIcon,
   //   title: 'Products'
   // },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Minha Conta'
-  },
-  {
-    href: '/app/settings',
-    icon: SettingsIcon,
-    title: 'Configurações'
-  },
+  // {
+  //   href: '/app/settings',
+  //   icon: SettingsIcon,
+  //   title: 'Configurações'
+  // },
   // {
   //   href: '/login',
   //   icon: LockIcon,
@@ -83,6 +80,7 @@ const items = [
 ];
 
 const DashboardSidebar = ({ onMobileClose, openMobile }) => {
+  const [user] = useAuthState(auth);
   const location = useLocation();
 
   useEffect(() => {
@@ -109,7 +107,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
       >
         <Avatar
           component={RouterLink}
-          src={user.avatar}
+          src={user && user.photoURL}
           sx={{
             cursor: 'pointer',
             width: 64,
@@ -121,13 +119,13 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
           color="textPrimary"
           variant="h5"
         >
-          {user.name}
+          {user && user.displayName}
         </Typography>
         <Typography
           color="textSecondary"
           variant="body2"
         >
-          {user.jobTitle}
+          {user && user.email}
         </Typography>
       </Box>
       <Divider />

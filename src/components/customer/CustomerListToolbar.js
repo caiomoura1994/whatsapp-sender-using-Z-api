@@ -23,11 +23,8 @@ const CustomerListToolbar = (props) => {
             justifyContent: 'flex-end'
           }}
         >
-          <Button>
-            Importar
-          </Button>
-          <Button sx={{ mx: 1 }}>
-            Exportar
+          <Button sx={{ mx: 2 }}>
+            Importar contatos
           </Button>
           <Button
             color="primary"
