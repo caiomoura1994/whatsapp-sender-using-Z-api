@@ -18,7 +18,7 @@ import {
   User as UserIcon,
   // UserPlus as UserPlusIcon,
   Send as SendIcon,
-  Power as PowerIcon,
+  // Power as PowerIcon,
   Users as UsersIcon
 } from 'react-feather';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -37,11 +37,11 @@ const items = [
     icon: UserIcon,
     title: 'Minha Conta'
   },
-  {
-    href: '/app/bot',
-    icon: PowerIcon,
-    title: 'Bot'
-  },
+  // {
+  //   href: '/app/bot',
+  //   icon: PowerIcon,
+  //   title: 'Bot'
+  // },
   {
     href: '/app/customers',
     icon: UsersIcon,

@@ -9,13 +9,32 @@ import {
   SvgIcon
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import moment from 'moment';
+
+import { auth, firestore } from 'src/services/firebase';
 import CustomerModal from './CustomerModal';
 
 const CustomerListToolbar = (props) => {
   const [isOpened, setOpen] = React.useState(false);
+  const [user] = useAuthState(auth);
+
+  const createNewContact = async ({
+    name,
+    phone
+  }) => {
+    const contactsRef = firestore.collection(`users/${user.uid}/contacts`);
+    await contactsRef.add({
+      createdAt: moment().format('yyyy-MM-DDThh:mm'),
+      name,
+      phone
+    });
+    setOpen(false);
+  };
+
   return (
     <>
-      <CustomerModal isOpened={isOpened} setOpen={setOpen} />
+      <CustomerModal submitFunction={createNewContact} isOpened={isOpened} setOpen={setOpen} />
       <Box {...props}>
         <Box
           sx={{
@@ -29,6 +48,7 @@ const CustomerListToolbar = (props) => {
           <Button
             color="primary"
             variant="contained"
+            onClick={() => setOpen(true)}
           >
             Adicionar Contato
           </Button>

@@ -4,8 +4,9 @@ import {
   Button,
 } from '@material-ui/core';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import moment from 'moment';
 
-import { auth, firebaseInstance, firestore } from 'src/services/firebase';
+import { auth, firestore } from 'src/services/firebase';
 import MessageModal from './MessageModal';
 
 const MessageListToolbar = (props) => {
@@ -20,7 +21,7 @@ const MessageListToolbar = (props) => {
     const messagesRef = firestore.collection(`users/${user.uid}/messages`);
     await messagesRef.add({
       message,
-      createdAt: firebaseInstance.firestore.FieldValue.serverTimestamp(),
+      createdAt: moment().format('yyyy-MM-DDThh:mm'),
       title,
       datetime
     });

@@ -26,28 +26,12 @@ const style = {
   borderRadius: 1
 };
 
-// const states = [
-//   {
-//     value: 'alabama',
-//     label: 'Alabama'
-//   },
-//   {
-//     value: 'new-york',
-//     label: 'New York'
-//   },
-//   {
-//     value: 'san-francisco',
-//     label: 'San Francisco'
-//   }
-// ];
-
 function CustomerModal(props) {
-  const { setOpen, isOpened } = props;
+  const { setOpen, isOpened, submitFunction } = props;
   const handleClose = () => setOpen(false);
   const [values, setValues] = useState({
-    name: 'Katarina',
-    phone: '71988362338',
-    // tags: 'Alabama'
+    name: '',
+    phone: '',
   });
 
   const handleChange = (event) => {
@@ -144,7 +128,7 @@ function CustomerModal(props) {
                 <Button
                   color="primary"
                   variant="contained"
-                  onClick={() => setOpen(false)}
+                  onClick={() => submitFunction(values)}
                 >
                   Salvar
                 </Button>
@@ -159,6 +143,7 @@ function CustomerModal(props) {
 
 CustomerModal.propTypes = {
   setOpen: PropTypes.func,
+  submitFunction: PropTypes.func,
   isOpened: PropTypes.bool
 };
 
