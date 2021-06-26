@@ -1,4 +1,4 @@
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
@@ -7,11 +7,11 @@ import {
   Button,
   Container,
   Grid,
-  Link,
-  TextField,
+  // Link,
+  // TextField,
   Typography
 } from '@material-ui/core';
-import FacebookIcon from 'src/icons/Facebook';
+// import FacebookIcon from 'src/icons/Facebook';
 import GoogleIcon from 'src/icons/Google';
 import { auth, firebaseInstance } from 'src/services/firebase';
 
@@ -53,13 +53,13 @@ const Login = () => {
             }}
           >
             {({
-              errors,
-              handleBlur,
-              handleChange,
+              // errors,
+              // handleBlur,
+              // handleChange,
               handleSubmit,
-              isSubmitting,
-              touched,
-              values
+              // isSubmitting,
+              // touched,
+              // values
             }) => (
               <form onSubmit={handleSubmit}>
                 <Box sx={{ mb: 3 }}>
@@ -78,6 +78,21 @@ const Login = () => {
                   </Typography>
                 </Box>
                 <Grid
+                  item
+                  xs={12}
+                  md={12}
+                >
+                  <Button
+                    fullWidth
+                    startIcon={<GoogleIcon />}
+                    onClick={signInWithGoogle}
+                    size="large"
+                    variant="contained"
+                  >
+                    Entrar com Google
+                  </Button>
+                </Grid>
+                {/* <Grid
                   container
                   spacing={3}
                 >
@@ -95,21 +110,6 @@ const Login = () => {
                       variant="contained"
                     >
                       Entrar com Facebook
-                    </Button>
-                  </Grid>
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                  >
-                    <Button
-                      fullWidth
-                      startIcon={<GoogleIcon />}
-                      onClick={signInWithGoogle}
-                      size="large"
-                      variant="contained"
-                    >
-                      Entrar com Google
                     </Button>
                   </Grid>
                 </Grid>
@@ -179,6 +179,7 @@ const Login = () => {
                     Cadastre-se
                   </Link>
                 </Typography>
+               */}
               </form>
             )}
           </Formik>

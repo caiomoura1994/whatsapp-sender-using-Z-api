@@ -17,7 +17,7 @@ import { auth, firestore } from 'src/services/firebase';
 
 const ProductList = () => {
   const [user] = useAuthState(auth);
-  const messagePath = `users/${user.uid}/messages`;
+  const messagePath = `users/${user && user.uid}/messages`;
   const messagesRef = firestore.collection(messagePath);
   const query = messagesRef.orderBy('createdAt');
   const {

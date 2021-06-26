@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { useNavigate } from 'react-router';
 import moment from 'moment';
 
 import { auth, firestore } from 'src/services/firebase';
@@ -18,19 +19,20 @@ import InteractionsApi from 'src/services/InteractionsApi';
 import CustomerModal from './CustomerModal';
 
 const CustomerListToolbar = (props) => {
+  const navigate = useNavigate();
   const [isOpened, setOpen] = React.useState(false);
   const [importingContacts, setImportingContacts] = React.useState(false);
   const [totalContacts, setTotalContacts] = React.useState(0);
   const [user] = useAuthState(auth);
 
   const getTotalContacts = async () => {
-    const contactsRef = firestore.collection(`users/${user.uid}/contacts`);
+    const contactsRef = firestore.collection(`users/${user && user.uid}/contacts`);
     const { size } = await contactsRef.get();
     setTotalContacts(size);
   };
 
   const deleteAllLeads = () => {
-    firestore.doc(`users/${user.uid}/contacts`).delete();
+    firestore.doc(`users/${user && user.uid}/contacts`).delete();
   };
 
   const createNewContact = async ({
@@ -39,7 +41,7 @@ const CustomerListToolbar = (props) => {
     ...contactProps
   }) => {
     if (phone && phone.search('-') !== -1) return;
-    const contactsRef = firestore.collection(`users/${user.uid}/contacts`);
+    const contactsRef = firestore.collection(`users/${user && user.uid}/contacts`);
     console.log({
       ...contactProps,
       createdAt: moment().format('yyyy-MM-DDThh:mm'),
@@ -96,11 +98,19 @@ const CustomerListToolbar = (props) => {
             Importar contatos
           </Button>
           <Button
+            sx={{ mx: 2 }}
             color="primary"
             variant="contained"
             onClick={() => setOpen(true)}
           >
             Adicionar Contato
+          </Button>
+          <Button
+            color="success"
+            variant="contained"
+            onClick={() => navigate('/app/dashboard')}
+          >
+            Mandar Mensagem
           </Button>
         </Box>
         <Box sx={{ mt: 3 }}>

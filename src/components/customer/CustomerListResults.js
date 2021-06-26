@@ -20,6 +20,7 @@ import {
   NavigateBefore as NavigateBeforeIcon
 } from '@material-ui/icons';
 import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
 import { usePagination } from 'use-pagination-firestore';
 import getInitials from 'src/utils/getInitials';
 import { auth, firestore } from 'src/services/firebase';
@@ -27,7 +28,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 const CustomerListResults = (rest) => {
   const [user] = useAuthState(auth);
-  const contactsPath = `users/${user.uid}/contacts`;
+  const contactsPath = `users/${user && user.uid}/contacts`;
   const contactsRef = firestore.collection(contactsPath);
   const query = contactsRef.orderBy('createdAt');
   const {
@@ -38,9 +39,11 @@ const CustomerListResults = (rest) => {
     getPrev,
     getNext,
   } = usePagination(query, { limit: 12 });
-  const removeContact = async (contactId) => {
-    console.log(`${contactsPath}/${contactId}`);
-    await firestore.doc(`${contactsPath}/${contactId}`).delete();
+  const removeContact = async (contact) => {
+    console.log(`${contactsPath}/${contact.id}`);
+    const canDeleteContact = window.confirm(`Tem certeza que quer excluir ${contact.name} | ${contact.phone}`);
+    if (!canDeleteContact) return;
+    await firestore.doc(`${contactsPath}/${contact.id}`).delete();
   };
 
   // const handleSelectAll = (event) => {
@@ -98,6 +101,9 @@ const CustomerListResults = (rest) => {
                   Data de cadastro
                 </TableCell>
                 <TableCell>
+                  Editar
+                </TableCell>
+                <TableCell>
                   Excluir
                 </TableCell>
               </TableRow>
@@ -143,7 +149,12 @@ const CustomerListResults = (rest) => {
                     {moment(customer.createdAt).format('DD/MM/YYYY hh:mm a')}
                   </TableCell>
                   <TableCell>
-                    <IconButton onClick={() => removeContact(customer.id)} aria-label="delete">
+                    <IconButton onClick={() => removeContact(customer)} aria-label="delete">
+                      <EditIcon color="action" />
+                    </IconButton>
+                  </TableCell>
+                  <TableCell>
+                    <IconButton onClick={() => removeContact(customer)} aria-label="delete">
                       <DeleteIcon color="action" />
                     </IconButton>
                   </TableCell>

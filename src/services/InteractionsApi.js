@@ -11,8 +11,8 @@ class InteractionsApi extends ApiService {
     return data;
   }
 
-  async sendTextMessage() {
-    const { data } = await this.service.get('interactions/send-text', {});
+  async sendTextMessage({ phone, message }) {
+    const { data } = await this.service.post('interactions/send-text', { phone, message });
     return data;
   }
 }

@@ -11,14 +11,14 @@ import {
 } from '@material-ui/core';
 import {
   // AlertCircle as AlertCircleIcon,
-  BarChart as BarChartIcon,
+  // BarChart as BarChartIcon,
   // Lock as LockIcon,
   // Settings as SettingsIcon,
   // ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   // UserPlus as UserPlusIcon,
   // Send as SendIcon,
-  // Power as PowerIcon,
+  Power as PowerIcon,
   Users as UsersIcon
 } from 'react-feather';
 import { useAuthState } from 'react-firebase-hooks/auth';
@@ -29,8 +29,8 @@ import NavItem from './NavItem';
 const items = [
   {
     href: '/app/dashboard',
-    icon: BarChartIcon,
-    title: 'Visão geral'
+    icon: PowerIcon,
+    title: 'Enviar em massa'
   },
   {
     href: '/app/account',

@@ -18,7 +18,7 @@ const MessageListToolbar = (props) => {
     message,
     datetime
   }) => {
-    const messagesRef = firestore.collection(`users/${user.uid}/messages`);
+    const messagesRef = firestore.collection(`users/${user && user.uid}/messages`);
     await messagesRef.add({
       message,
       createdAt: moment().format('yyyy-MM-DDThh:mm'),
