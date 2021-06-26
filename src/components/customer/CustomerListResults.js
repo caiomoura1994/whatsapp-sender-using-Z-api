@@ -37,7 +37,7 @@ const CustomerListResults = (rest) => {
     isEnd,
     getPrev,
     getNext,
-  } = usePagination(query, { limit: 6 });
+  } = usePagination(query, { limit: 12 });
   const removeContact = async (contactId) => {
     console.log(`${contactsPath}/${contactId}`);
     await firestore.doc(`${contactsPath}/${contactId}`).delete();
@@ -123,7 +123,7 @@ const CustomerListResults = (rest) => {
                       }}
                     >
                       <Avatar
-                        src={customer.avatarUrl}
+                        src={customer.profileThumbnail}
                         sx={{ mr: 2 }}
                       >
                         {getInitials(customer.name)}
