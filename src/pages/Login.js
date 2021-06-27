@@ -74,7 +74,7 @@ const Login = () => {
                     gutterBottom
                     variant="body2"
                   >
-                    Bem vindo ao Zeki
+                    Bem vindo ao AutoZap, faça login para continuar
                   </Typography>
                 </Box>
                 <Grid

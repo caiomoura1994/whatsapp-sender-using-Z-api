@@ -1,4 +1,5 @@
 // import PropTypes from 'prop-types';
+import { useState } from 'react';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -25,8 +26,11 @@ import { usePagination } from 'use-pagination-firestore';
 import getInitials from 'src/utils/getInitials';
 import { auth, firestore } from 'src/services/firebase';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import CustomerModal from './CustomerModal';
 
 const CustomerListResults = (rest) => {
+  const [isOpened, setOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState({});
   const [user] = useAuthState(auth);
   const contactsPath = `users/${user && user.uid}/contacts`;
   const contactsRef = firestore.collection(contactsPath);
@@ -46,41 +50,44 @@ const CustomerListResults = (rest) => {
     await firestore.doc(`${contactsPath}/${contact.id}`).delete();
   };
 
-  // const handleSelectAll = (event) => {
-  //   let newSelectedCustomerIds;
-  //   if (event.target.checked) {
-  //     newSelectedCustomerIds = customers.map((customer) => customer.id);
-  //   } else {
-  //     newSelectedCustomerIds = [];
-  //   }
-  //   setSelectedCustomerIds(newSelectedCustomerIds);
-  // };
-  // const handleSelectOne = (event, id) => {
-  //   const selectedIndex = selectedCustomerIds.indexOf(id);
-  //   let newSelectedCustomerIds = [];
-  //   if (selectedIndex === -1) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
-  //   } else if (selectedIndex === 0) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-  //   } else if (selectedIndex === selectedCustomerIds.length - 1) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelectedCustomerIds = newSelectedCustomerIds.concat(
-  //       selectedCustomerIds.slice(0, selectedIndex),
-  //       selectedCustomerIds.slice(selectedIndex + 1)
-  //     );
-  //   }
-  //   setSelectedCustomerIds(newSelectedCustomerIds);
-  // };
+  const editContact = async ({
+    name,
+    phone,
+    ...contactProps
+  }) => {
+    if (phone && phone.search('-') !== -1) return;
+    console.log({
+      ...contactProps,
+      createdAt: moment().format('yyyy-MM-DDThh:mm'),
+      name,
+      phone
+    });
+
+    const contactsRefToEdit = firestore.collection(`users/${user.uid}/contacts`);
+    await contactsRefToEdit.doc(phone).set({
+      ...contactProps,
+      createdAt: moment().format('yyyy-MM-DDThh:mm'),
+      name: name || '-',
+      phone,
+    });
+    setOpen(false);
+  };
+
+  const openEditContactModal = async (contact) => {
+    setSelectedContact(contact);
+    setOpen(true);
+  };
 
   return (
-    <Card {...rest}>
-      <PerfectScrollbar>
-        <Box sx={{ minWidth: 1050 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {/* <TableCell padding="checkbox">
+    <>
+      <CustomerModal submitFunction={editContact} isOpened={isOpened} setOpen={setOpen} defaultValue={selectedContact} />
+      <Card {...rest}>
+        <PerfectScrollbar>
+          <Box sx={{ minWidth: 1050 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  {/* <TableCell padding="checkbox">
                   <Checkbox
                     checked={selectedCustomerIds.length === customers.length}
                     color="primary"
@@ -91,96 +98,97 @@ const CustomerListResults = (rest) => {
                     onChange={handleSelectAll}
                   />
                 </TableCell> */}
-                <TableCell>
-                  Nome
-                </TableCell>
-                <TableCell>
-                  Telefone
-                </TableCell>
-                <TableCell>
-                  Data de cadastro
-                </TableCell>
-                <TableCell>
-                  Editar
-                </TableCell>
-                <TableCell>
-                  Excluir
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {isLoading ? 'Carregando ...' : contacts.map((customer) => (
-                <TableRow
-                  hover
-                  key={customer.id}
-                >
-                  {/* <TableCell padding="checkbox">
+                  <TableCell>
+                    Nome
+                  </TableCell>
+                  <TableCell>
+                    Telefone
+                  </TableCell>
+                  <TableCell>
+                    Data de cadastro
+                  </TableCell>
+                  <TableCell>
+                    Editar
+                  </TableCell>
+                  <TableCell>
+                    Excluir
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {isLoading ? 'Carregando ...' : contacts.map((customer) => (
+                  <TableRow
+                    hover
+                    key={customer.id}
+                  >
+                    {/* <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectedCustomerIds.indexOf(customer.id) !== -1}
                       onChange={(event) => handleSelectOne(event, customer.id)}
                       value="true"
                     />
                   </TableCell> */}
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex'
-                      }}
-                    >
-                      <Avatar
-                        src={customer.profileThumbnail}
-                        sx={{ mr: 2 }}
+                    <TableCell>
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex'
+                        }}
                       >
-                        {getInitials(customer.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {customer.name}
-                      </Typography>
-                    </Box>
-                  </TableCell>
-                  <TableCell>
-                    {customer.phone}
-                  </TableCell>
-                  <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY hh:mm a')}
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => removeContact(customer)} aria-label="delete">
-                      <EditIcon color="action" />
-                    </IconButton>
-                  </TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => removeContact(customer)} aria-label="delete">
-                      <DeleteIcon color="action" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                        <Avatar
+                          src={customer.profileThumbnail}
+                          sx={{ mr: 2 }}
+                        >
+                          {getInitials(customer.name)}
+                        </Avatar>
+                        <Typography
+                          color="textPrimary"
+                          variant="body1"
+                        >
+                          {customer.name}
+                        </Typography>
+                      </Box>
+                    </TableCell>
+                    <TableCell>
+                      {customer.phone}
+                    </TableCell>
+                    <TableCell>
+                      {moment(customer.createdAt).format('DD/MM/YYYY hh:mm a')}
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => openEditContactModal(customer)} aria-label="delete">
+                        <EditIcon color="action" />
+                      </IconButton>
+                    </TableCell>
+                    <TableCell>
+                      <IconButton onClick={() => removeContact(customer)} aria-label="delete">
+                        <DeleteIcon color="action" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        </PerfectScrollbar>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            pt: 3
+          }}
+        >
+          <Grid item container xs={12} justifyContent="flex-end">
+            <IconButton onClick={getPrev} disabled={isStart}>
+              <NavigateBeforeIcon />
+            </IconButton>
+            <IconButton onClick={getNext} disabled={isEnd}>
+              <NavgateNextIcon />
+            </IconButton>
+          </Grid>
         </Box>
-      </PerfectScrollbar>
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          pt: 3
-        }}
-      >
-        <Grid item container xs={12} justifyContent="flex-end">
-          <IconButton onClick={getPrev} disabled={isStart}>
-            <NavigateBeforeIcon />
-          </IconButton>
-          <IconButton onClick={getNext} disabled={isEnd}>
-            <NavgateNextIcon />
-          </IconButton>
-        </Grid>
-      </Box>
-    </Card>
+      </Card>
+    </>
   );
 };
 

@@ -14,6 +14,7 @@ import {
 import { usePagination } from 'use-pagination-firestore';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router';
+import { useSnackbar } from 'notistack';
 
 import BotsApi from 'src/services/BotsApi';
 import DashboardSendMessageModal from 'src/components/DashboardSendMessageModal';
@@ -21,6 +22,14 @@ import InteractionsApi from 'src/services/InteractionsApi';
 import { auth, firestore } from 'src/services/firebase';
 
 const Dashboard = () => {
+  const snackBarOptions = {
+    variant: 'info',
+    anchorOrigin: {
+      vertical: 'bottom',
+      horizontal: 'right',
+    },
+  };
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [botIsConnected, setBotIsConnected] = useState(false);
   const [qrCodeImage, setQrCodeImage] = useState('');
@@ -39,6 +48,7 @@ const Dashboard = () => {
   } = usePagination(query, { limit: 12 });
 
   async function getQrCode() {
+    if (window.location.pathname !== '/app/dashboard') return;
     if (botIsConnected) return;
     const response = await BotsApi.getQrCodeImage();
     if (response.connected) setBotIsConnected(true);
@@ -57,13 +67,18 @@ const Dashboard = () => {
     getQrCode();
   }
   async function sendMessages(propMessage) {
-    if (isEnd && contacts.length === 0) return;
+    if (isEnd && contacts.length === 0) {
+      enqueueSnackbar('Mensagens enviadas com sucesso!', { ...snackBarOptions, variant: 'success' });
+      return;
+    }
     let sended = sendedContacts;
     await Promise.all(contacts.map(async (contact) => {
       console.log(contact.id, propMessage);
       try {
         const response = await InteractionsApi.sendTextMessage({ message: propMessage, phone: contact.id });
-        if (response.zaapId && response.messageId) setOpen(false);
+        if (response.zaapId && response.messageId) {
+          enqueueSnackbar(`Mensagens enviada para ${contact.name} com sucesso!`, snackBarOptions);
+        }
         sended = [contact, ...sended];
       } catch (error) {
         console.log(error);
@@ -90,6 +105,7 @@ const Dashboard = () => {
       <DashboardSendMessageModal
         submitFunction={(p) => {
           setMessageToSend(p.message);
+          setOpen(false);
           sendMessages(p.message);
         }}
         isOpened={isOpened}
@@ -102,11 +118,12 @@ const Dashboard = () => {
           py: 3
         }}
       >
-        <Container maxWidth={false}>
+        <Container maxWidth={false} sx={{ height: '100vh', marginTop: '2rem' }}>
           <Grid
             container
             spacing={3}
             justifyContent="center"
+            textAlign="center"
           >
             {!isLoading && !botIsConnected && (
               <Card style={{ display: 'flex', padding: '2rem' }}>
@@ -124,6 +141,10 @@ const Dashboard = () => {
                   <img
                     src={qrCodeImage}
                     alt="Paella dish"
+                    width="100%"
+                    style={{
+                      objectFit: 'contain'
+                    }}
                   />
                 )}
               </Card>
@@ -147,7 +168,7 @@ const Dashboard = () => {
                         setOpen(true);
                       }}
                     >
-                      Escrever uma MSG
+                      Escrever uma mensagem
                     </Button>
                   </CardContent>
                 </Card>

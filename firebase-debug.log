@@ -1,0 +1,20 @@
+[debug] [2021-06-27T18:43:05.477Z] ----------------------------------------------------------------------
+[debug] [2021-06-27T18:43:05.479Z] Command:       /usr/local/bin/firebase /Users/caiomoura/.cache/firebase/tools/lib/node_modules/firebase-tools/lib/bin/firebase deploy
+[debug] [2021-06-27T18:43:05.479Z] CLI Version:   9.14.0
+[debug] [2021-06-27T18:43:05.479Z] Platform:      darwin
+[debug] [2021-06-27T18:43:05.479Z] Node Version:  v12.18.1
+[debug] [2021-06-27T18:43:05.536Z] Time:          Sun Jun 27 2021 15:43:05 GMT-0300 (Brasilia Standard Time)
+[debug] [2021-06-27T18:43:05.536Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2021-06-27T18:43:05.556Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2021-06-27T18:43:05.556Z] > authorizing via signed-in user (caiobdmoura@gmail.com)
+[debug] [2021-06-27T18:43:05.557Z] [iam] checking project zapei-chat for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2021-06-27T18:43:05.574Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2021-06-27T18:43:05.574Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2021-06-27T18:43:05.980Z] <<< HTTP RESPONSE 200 {"pragma":"no-cache","expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Sun, 27 Jun 2021 18:47:37 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-06-27T18:43:06.012Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/zapei-chat:testIamPermissions  
+ {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2021-06-27T18:43:06.933Z] <<< HTTP RESPONSE 200 {"content-type":"application/json; charset=UTF-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","date":"Sun, 27 Jun 2021 18:47:38 GMT","server":"ESF","cache-control":"private","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","server-timing":"gfet4t7; dur=727","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-T051=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2021-06-27T18:43:06.934Z] >>> HTTP REQUEST POST https://iam.googleapis.com/v1/projects/zapei-chat/serviceAccounts/zapei-chat@appspot.gserviceaccount.com:testIamPermissions  
+ {"permissions":["iam.serviceAccounts.actAs"]}

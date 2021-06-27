@@ -2,14 +2,14 @@ import * as React from 'react';
 import {
   Box,
   Button,
-  Card,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon,
+  // Card,
+  // CardContent,
+  // TextField,
+  // InputAdornment,
+  // SvgIcon,
   Typography
 } from '@material-ui/core';
-import { Search as SearchIcon } from 'react-feather';
+// import { Search as SearchIcon } from 'react-feather';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router';
 import moment from 'moment';
@@ -31,9 +31,9 @@ const CustomerListToolbar = (props) => {
     setTotalContacts(size);
   };
 
-  const deleteAllLeads = () => {
-    firestore.doc(`users/${user && user.uid}/contacts`).delete();
-  };
+  // const deleteAllLeads = () => {
+  //   firestore.doc(`users/${user && user.uid}/contacts`).delete();
+  // };
 
   const createNewContact = async ({
     name,
@@ -61,10 +61,16 @@ const CustomerListToolbar = (props) => {
   const importContacts = async () => {
     setImportingContacts(true);
     const chats = await InteractionsApi.getAllChats({ page, pageSize: 10 });
+    if (chats.error) {
+      window.alert('Seu celular não está conectado!');
+      navigate('/app/dashboard');
+      return;
+    }
     if (chats && chats.length === 0) {
       setImportingContacts(false);
       return;
     }
+    console.log(chats);
     await Promise.all(chats.map(createNewContact));
     page += 1;
     getTotalContacts();
@@ -92,7 +98,7 @@ const CustomerListToolbar = (props) => {
             variant="body2"
             alignSelf="center"
           >
-            {totalContacts}
+            {`${totalContacts} contatos importados`}
           </Typography>
           <Button disabled={importingContacts} onClick={importContacts} sx={{ mx: 2 }}>
             Importar contatos
@@ -113,7 +119,7 @@ const CustomerListToolbar = (props) => {
             Mandar Mensagem
           </Button>
         </Box>
-        <Box sx={{ mt: 3 }}>
+        {/* <Box sx={{ mt: 3 }}>
           <Card>
             <CardContent style={{ display: 'flex', justifyContent: 'space-between' }}>
               <Box sx={{ maxWidth: 500, width: '100%' }}>
@@ -144,7 +150,7 @@ const CustomerListToolbar = (props) => {
               </Button>
             </CardContent>
           </Card>
-        </Box>
+        </Box> */}
       </Box>
     </>
   );

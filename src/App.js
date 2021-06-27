@@ -2,6 +2,8 @@ import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useRoutes } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/core';
 import { useAuthState } from 'react-firebase-hooks/auth';
+import { SnackbarProvider } from 'notistack';
+
 import GlobalStyles from 'src/components/GlobalStyles';
 import 'src/mixins/chartjs';
 import theme from 'src/theme';
@@ -22,8 +24,10 @@ const App = () => {
   }
   return (
     <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      {routing}
+      <SnackbarProvider maxSnack={5}>
+        <GlobalStyles />
+        {routing}
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };

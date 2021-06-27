@@ -27,12 +27,21 @@ const style = {
 };
 
 function CustomerModal(props) {
-  const { setOpen, isOpened, submitFunction } = props;
+  const {
+    setOpen,
+    isOpened,
+    submitFunction,
+    defaultValue
+  } = props;
   const handleClose = () => setOpen(false);
   const [values, setValues] = useState({
     name: '',
     phone: '',
   });
+
+  React.useEffect(() => {
+    setValues(defaultValue);
+  }, [defaultValue]);
 
   const handleChange = (event) => {
     setValues({
@@ -78,7 +87,7 @@ function CustomerModal(props) {
                       name="name"
                       onChange={handleChange}
                       required
-                      value={values.name}
+                      value={values && values.name}
                       variant="outlined"
                     />
                   </Grid>
@@ -89,7 +98,7 @@ function CustomerModal(props) {
                       name="phone"
                       onChange={handleChange}
                       required
-                      value={values.phone}
+                      value={values && values.phone}
                       variant="outlined"
                     />
                   </Grid>
@@ -102,7 +111,7 @@ function CustomerModal(props) {
                       required
                       select
                       SelectProps={{ native: true, multiple: true }}
-                      value={values.tags}
+                      value={values && values.tags}
                       variant="outlined"
                     >
                       {states.map((option) => (
@@ -144,6 +153,7 @@ function CustomerModal(props) {
 CustomerModal.propTypes = {
   setOpen: PropTypes.func,
   submitFunction: PropTypes.func,
+  defaultValue: PropTypes.object,
   isOpened: PropTypes.bool
 };
 

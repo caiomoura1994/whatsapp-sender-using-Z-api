@@ -15,26 +15,28 @@ const routes = (redirectRoot) => [
   {
     path: 'app',
     element: <DashboardLayout />,
+    lazy: true,
     children: [
-      { path: 'account', element: <Account /> },
-      { path: 'customers', element: <CustomerList /> },
-      { path: 'dashboard', element: <Dashboard /> },
-      { path: 'messages', element: <MessageList /> },
-      { path: 'bot', element: <MessageList /> },
-      { path: 'products', element: <ProductList /> },
-      { path: 'settings', element: <Settings /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { lazy: true, path: 'account', element: <Account /> },
+      { lazy: true, path: 'customers', element: <CustomerList /> },
+      { lazy: true, path: 'dashboard', element: <Dashboard /> },
+      { lazy: true, path: 'messages', element: <MessageList /> },
+      { lazy: true, path: 'bot', element: <MessageList /> },
+      { lazy: true, path: 'products', element: <ProductList /> },
+      { lazy: true, path: 'settings', element: <Settings /> },
+      { lazy: true, path: '*', element: <Navigate to="/404" /> }
     ]
   },
   {
     path: '/',
     element: <MainLayout />,
+    lazy: true,
     children: [
-      { path: 'login', element: <Login /> },
-      { path: 'register', element: <Register /> },
-      { path: '404', element: <NotFound /> },
-      { path: '/', element: <Navigate to={redirectRoot} /> },
-      { path: '*', element: <Navigate to="/404" /> }
+      { lazy: true, path: 'login', element: <Login /> },
+      { lazy: true, path: 'register', element: <Register /> },
+      { lazy: true, path: '404', element: <NotFound /> },
+      { lazy: true, path: '/', element: <Navigate to={redirectRoot} /> },
+      { lazy: true, path: '*', element: <Navigate to="/404" /> }
     ]
   }
 ];
