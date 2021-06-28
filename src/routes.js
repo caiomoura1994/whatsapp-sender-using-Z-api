@@ -10,6 +10,8 @@ import ProductList from 'src/pages/ProductList';
 import MessageList from 'src/pages/MessageList';
 import Register from 'src/pages/Register';
 import Settings from 'src/pages/Settings';
+import ChatScreen from 'src/pages/ChatScreen';
+import ChatDetail from 'src/pages/ChatScreen/ChatDetail';
 
 const routes = (redirectRoot) => [
   {
@@ -36,7 +38,9 @@ const routes = (redirectRoot) => [
       { lazy: true, path: 'register', element: <Register /> },
       { lazy: true, path: '404', element: <NotFound /> },
       { lazy: true, path: '/', element: <Navigate to={redirectRoot} /> },
-      { lazy: true, path: '*', element: <Navigate to="/404" /> }
+      { lazy: true, path: '*', element: <Navigate to="/404" /> },
+      { path: '/chats', element: <ChatScreen />, },
+      { path: 'chats/:id', element: <ChatDetail /> },
     ]
   }
 ];

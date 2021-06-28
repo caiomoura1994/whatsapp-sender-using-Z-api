@@ -67,7 +67,7 @@ const MessageCard = ({ message, messagePath, ...rest }) => {
               color="textSecondary"
               variant="body2"
             >
-              {moment(message.datetime).format('DD/MM/yyyy às HH:mm')}
+              {moment(message.datetime).format('DD/MM/YYYY hh:mm a')}
             </Typography>
           </Grid>
           <Grid item>
