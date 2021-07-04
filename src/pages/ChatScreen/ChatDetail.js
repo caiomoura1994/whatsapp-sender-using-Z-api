@@ -7,7 +7,7 @@ import ChatMenuItem from 'src/components/chats/ChatMenuItem';
 import ChatDetailMessages from 'src/components/chats/ChatDetailMessages';
 import { auth, firestore } from 'src/services/firebase';
 
-export default function ChatScreen() {
+export default function ChatDetail() {
   const { uid, photoURL } = auth.currentUser;
   const [formValue, setFormValue] = useState('');
   const messagesRef = firestore.collection('messages');

@@ -16,19 +16,21 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router';
 import { useSnackbar } from 'notistack';
 
+import { useSocketEventName, useEmitEvent } from 'src/hooks/SocketProvider';
 import BotsApi from 'src/services/BotsApi';
 import DashboardSendMessageModal from 'src/components/DashboardSendMessageModal';
 import InteractionsApi from 'src/services/InteractionsApi';
 import { auth, firestore } from 'src/services/firebase';
 
+const SNACK_BAR_OPTIONS = {
+  variant: 'info',
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'right',
+  },
+};
+
 const Dashboard = () => {
-  const snackBarOptions = {
-    variant: 'info',
-    anchorOrigin: {
-      vertical: 'bottom',
-      horizontal: 'right',
-    },
-  };
   const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [botIsConnected, setBotIsConnected] = useState(false);
@@ -47,37 +49,43 @@ const Dashboard = () => {
     getNext,
   } = usePagination(query, { limit: 12 });
 
-  async function getQrCode() {
-    if (window.location.pathname !== '/app/dashboard') return;
-    if (botIsConnected) return;
-    const response = await BotsApi.getQrCodeImage();
-    if (response.connected) setBotIsConnected(true);
+  const { subscribe, unsubscribe } = useSocketEventName(`qr-${user && user.uid}`, (data) => {
+    setQrCodeImage(data.src);
     setIsLoading(false);
-    setQrCodeImage(response.value);
-    console.log('response.value', response.value);
-    setTimeout(() => {
-      getQrCode();
-    }, 3000);
-  }
+  });
+  const { subscribe: subscribeBot, unsubscribe: unsubscribeBot } = useSocketEventName(`ready-${user && user.uid}`, (data) => {
+    console.log(data);
+    setIsLoading(false);
+    setBotIsConnected(true);
+  });
+
+  const emitCreateSessionBot = useEmitEvent('create-session');
+
   async function disconnectBot() {
     setIsLoading(true);
     const response = await BotsApi.disconnectBot();
     setIsLoading(false);
     if (response.value) setBotIsConnected(false);
-    getQrCode();
   }
   async function sendMessages(propMessage) {
     if (isEnd && contacts.length === 0) {
-      enqueueSnackbar('Mensagens enviadas com sucesso!', { ...snackBarOptions, variant: 'success' });
+      enqueueSnackbar('Mensagens enviadas com sucesso!', { ...SNACK_BAR_OPTIONS, variant: 'success' });
       return;
     }
     let sended = sendedContacts;
     await Promise.all(contacts.map(async (contact) => {
       console.log(contact.id, propMessage);
       try {
-        const response = await InteractionsApi.sendTextMessage({ message: propMessage, phone: contact.id });
-        if (response.zaapId && response.messageId) {
-          enqueueSnackbar(`Mensagens enviada para ${contact.name} com sucesso!`, snackBarOptions);
+        const response = await InteractionsApi.sendTextMessage({
+          message: propMessage,
+          phone: contact.id,
+          sender: user.uid
+        });
+        console.log('response:', response);
+        // status
+        // response
+        if (response.status) {
+          enqueueSnackbar(`Mensagens enviada para ${contact.name} com sucesso!`, SNACK_BAR_OPTIONS);
         }
         sended = [contact, ...sended];
       } catch (error) {
@@ -94,8 +102,20 @@ const Dashboard = () => {
   }, [contacts]);
 
   useEffect(() => {
-    getQrCode();
-  }, []);
+    subscribe();
+    return unsubscribe;
+  }, [user]);
+
+  useEffect(() => {
+    subscribeBot();
+    return unsubscribeBot;
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
+    }
+  }, [user]);
 
   return (
     <>

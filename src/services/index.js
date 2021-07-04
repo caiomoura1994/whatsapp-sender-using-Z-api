@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const apiClient = axios.create({
-  baseURL: 'https://us-central1-zapei-chat.cloudfunctions.net',
+  baseURL: 'http://localhost:8000',
   responseType: 'json',
   headers: {
     'Content-Type': 'application/json',
