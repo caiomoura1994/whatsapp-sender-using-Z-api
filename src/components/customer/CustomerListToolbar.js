@@ -35,32 +35,28 @@ const CustomerListToolbar = (props) => {
   //   firestore.doc(`users/${user && user.uid}/contacts`).delete();
   // };
 
-  const createNewContact = async ({
-    name,
-    phone,
-    ...contactProps
-  }) => {
+  const createNewContact = async (contactProps) => {
+    if (!contactProps) return;
+    const phone = contactProps.phone || contactProps.id.user;
     if (phone && phone.search('-') !== -1) return;
     const contactsRef = firestore.collection(`users/${user && user.uid}/contacts`);
-    console.log({
-      ...contactProps,
-      createdAt: moment().format('yyyy-MM-DDThh:mm'),
-      name,
-      phone
-    });
     await contactsRef.doc(phone).set({
       ...contactProps,
       createdAt: moment().format('yyyy-MM-DDThh:mm'),
-      name: name || '-',
+      name: contactProps.name || '-',
       phone,
+      profileThumbnail: contactProps.imageurl || '',
     });
     setOpen(false);
   };
 
-  let page = 1;
+  let startChat = 0;
   const importContacts = async () => {
+    const finishChat = startChat + 5;
     setImportingContacts(true);
-    const chats = await InteractionsApi.getAllChats({ page, pageSize: 10 });
+    const chats = await InteractionsApi.getAllChats({ startChat, finishChat, sender: user.uid });
+    console.log('chats:', chats);
+    if (!chats) return;
     if (chats.error) {
       window.alert('Seu celular não está conectado!');
       navigate('/app/dashboard');
@@ -70,13 +66,14 @@ const CustomerListToolbar = (props) => {
       setImportingContacts(false);
       return;
     }
-    console.log(chats);
+    console.log('finishChat:', finishChat);
+    console.log('startChat:', startChat);
     await Promise.all(chats.map(createNewContact));
-    page += 1;
+    startChat += 6;
     getTotalContacts();
-    setTimeout(() => {
-      importContacts();
-    }, 5000);
+    // setTimeout(() => {
+    //   importContacts();
+    // }, 5000);
   };
 
   React.useEffect(() => {

@@ -1,8 +1,12 @@
 import ApiService from './ApiService';
 
 class InteractionsApi extends ApiService {
-  async getAllChats({ page, pageSize }) {
-    const { data } = await this.service.post('interactions/chats', { page, pageSize });
+  async getAllChats({ startChat, finishChat, sender }) {
+    const { data } = await this.service.post('interactions/chats', {
+      startChat,
+      finishChat,
+      sender
+    });
     return data;
   }
 
