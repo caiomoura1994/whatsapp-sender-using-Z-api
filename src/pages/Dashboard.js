@@ -28,6 +28,7 @@ const SNACK_BAR_OPTIONS = {
     vertical: 'bottom',
     horizontal: 'right',
   },
+  // content
 };
 
 const Dashboard = () => {
@@ -55,6 +56,7 @@ const Dashboard = () => {
   });
   const { subscribe: subscribeBot, unsubscribe: unsubscribeBot } = useSocketEventName(`ready-${user && user.uid}`, (data) => {
     console.log(data);
+    enqueueSnackbar('Bot Conectado com Sucesso!', { ...SNACK_BAR_OPTIONS, variant: 'success' });
     setIsLoading(false);
     setBotIsConnected(true);
   });
@@ -113,9 +115,10 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (user) {
+      console.log(user.uid);
       emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
     }
-  }, [user]);
+  }, [user, user.uid]);
 
   return (
     <>

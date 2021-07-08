@@ -38,12 +38,13 @@ const CustomerListToolbar = (props) => {
   const createNewContact = async (contactProps) => {
     if (!contactProps) return;
     const phone = contactProps.phone || contactProps.id.user;
+    const name = contactProps.name || contactProps.pushname || contactProps.verifiedName || '-';
     if (phone && phone.search('-') !== -1) return;
     const contactsRef = firestore.collection(`users/${user && user.uid}/contacts`);
     await contactsRef.doc(phone).set({
       ...contactProps,
       createdAt: moment().format('yyyy-MM-DDThh:mm'),
-      name: contactProps.name || '-',
+      name,
       phone,
       profileThumbnail: contactProps.imageurl || '',
     });
