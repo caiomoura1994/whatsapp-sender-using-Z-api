@@ -6,8 +6,8 @@ class BotsApi extends ApiService {
     return data;
   }
 
-  async disconnectBot() {
-    const { data } = await this.service.get('/bots/disconnectBot', {});
+  async disconnectBot(sender) {
+    const { data } = await this.service.post('/bots/disconnectBot', { sender });
     return data;
   }
 

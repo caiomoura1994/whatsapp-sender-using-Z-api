@@ -62,13 +62,30 @@ const Dashboard = () => {
     setBotIsConnected(true);
   });
 
+  const { subscribe: subscribeBotFail, unsubscribe: unsubscribeBotFail } = useSocketEventName(`auth-failure-${user && user.uid}`, (data) => {
+    console.log(data);
+    enqueueSnackbar('Autenticação falhou!', { ...SNACK_BAR_OPTIONS, variant: 'error', preventDuplicate: true });
+    setIsLoading(false);
+    setBotIsConnected(false);
+  });
+
+  const { subscribe: subscribeBotDisconnected, unsubscribe: unsubscribeBotDisconnected } = useSocketEventName(`disconnected-${user && user.uid}`, (data) => {
+    console.log(data);
+    enqueueSnackbar('Bot Desconectado!', { ...SNACK_BAR_OPTIONS, variant: 'error', preventDuplicate: true });
+    setIsLoading(false);
+    setBotIsConnected(false);
+  });
+
   const emitCreateSessionBot = useEmitEvent('create-session');
 
   async function disconnectBot() {
     setIsLoading(true);
-    const response = await BotsApi.disconnectBot();
+    const response = await BotsApi.disconnectBot(user.uid);
     setIsLoading(false);
-    if (response.value) setBotIsConnected(false);
+    if (response.value) {
+      setBotIsConnected(false);
+      emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
+    }
   }
   async function sendMessages(propMessage) {
     if (isEnd && contacts.length === 0) {
@@ -111,6 +128,16 @@ const Dashboard = () => {
   useEffect(() => {
     subscribeBot();
     return unsubscribeBot;
+  }, [user]);
+
+  useEffect(() => {
+    subscribeBotFail();
+    return unsubscribeBotFail;
+  }, [user]);
+
+  useEffect(() => {
+    subscribeBotDisconnected();
+    return unsubscribeBotDisconnected;
   }, [user]);
 
   useEffect(() => {
