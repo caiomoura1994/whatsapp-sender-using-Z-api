@@ -13,17 +13,35 @@ import {
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useNavigate } from 'react-router';
 import moment from 'moment';
+import { useSnackbar } from 'notistack';
 
+import { useSocketEventName } from 'src/hooks/SocketProvider';
 import { auth, firestore } from 'src/services/firebase';
 import InteractionsApi from 'src/services/InteractionsApi';
 import CustomerModal from './CustomerModal';
 
+const SNACK_BAR_OPTIONS = {
+  variant: 'info',
+  anchorOrigin: {
+    vertical: 'bottom',
+    horizontal: 'right',
+  },
+  preventDuplicate: true
+};
+
 const CustomerListToolbar = (props) => {
+  const { enqueueSnackbar } = useSnackbar();
   const navigate = useNavigate();
   const [isOpened, setOpen] = React.useState(false);
   const [importingContacts, setImportingContacts] = React.useState(false);
   const [totalContacts, setTotalContacts] = React.useState(0);
   const [user] = useAuthState(auth);
+
+  const { subscribe, unsubscribe } = useSocketEventName(`importContacts-${user && user.uid}`, (data) => {
+    console.log(data);
+    const variant = data.imported ? 'success' : 'error';
+    enqueueSnackbar(data.message, { ...SNACK_BAR_OPTIONS, variant });
+  });
 
   const getTotalContacts = async () => {
     const contactsRef = firestore.collection(`users/${user && user.uid}/contacts`);
@@ -51,35 +69,21 @@ const CustomerListToolbar = (props) => {
     setOpen(false);
   };
 
-  let startChat = 0;
   const importContacts = async () => {
-    const finishChat = startChat + 5;
     setImportingContacts(true);
-    const chats = await InteractionsApi.getAllChats({ startChat, finishChat, sender: user.uid });
-    console.log('chats:', chats);
-    if (!chats) return;
-    if (chats.error) {
-      window.alert('Seu celular não está conectado!');
-      navigate('/app/dashboard');
-      return;
-    }
-    if (chats && chats.length === 0) {
-      setImportingContacts(false);
-      return;
-    }
-    console.log('finishChat:', finishChat);
-    console.log('startChat:', startChat);
-    await Promise.all(chats.map(createNewContact));
-    startChat += 6;
-    getTotalContacts();
-    // setTimeout(() => {
-    //   importContacts();
-    // }, 5000);
+    await InteractionsApi.getAllChats({ sender: user.uid });
+    enqueueSnackbar('Solicitação enviada! Em até 24h estaremos importando seus contatos!', SNACK_BAR_OPTIONS);
+    setImportingContacts(false);
   };
 
   React.useEffect(() => {
     getTotalContacts();
   }, []);
+
+  React.useEffect(() => {
+    subscribe();
+    return unsubscribe;
+  }, [user]);
 
   return (
     <>

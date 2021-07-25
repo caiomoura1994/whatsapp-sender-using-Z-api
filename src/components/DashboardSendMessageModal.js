@@ -10,10 +10,12 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Chip,
   Divider,
   Grid,
   TextField
 } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 
 const style = {
   position: 'absolute',
@@ -28,10 +30,19 @@ const style = {
 
 function DashboardSendMessageModal(props) {
   const { setOpen, isOpened, submitFunction } = props;
+  const { enqueueSnackbar } = useSnackbar();
   const handleClose = () => setOpen(false);
   const [values, setValues] = useState({
     message: ''
   });
+
+  const addNameInMessage = () => {
+    setValues({ message: `${values.message} {nome}` });
+  };
+
+  const addPeriodInMessage = () => {
+    setValues({ message: `${values.message} {periodo-dia}` });
+  };
 
   const handleChange = (event) => {
     setValues({
@@ -82,6 +93,17 @@ function DashboardSendMessageModal(props) {
                       required
                       rows={4}
                     />
+                    <Box sx={{ pt: 2 }}>
+                      <Chip
+                        label="Nome do cliente"
+                        onClick={addNameInMessage}
+                        sx={{ mr: 1 }}
+                      />
+                      <Chip
+                        label="Período do dia"
+                        onClick={addPeriodInMessage}
+                      />
+                    </Box>
                   </Grid>
                 </Grid>
               </CardContent>
@@ -98,6 +120,12 @@ function DashboardSendMessageModal(props) {
                   variant="contained"
                   onClick={() => {
                     if (!values.message) return;
+                    if (!values.message.includes('{nome}')) {
+                      enqueueSnackbar('O nome do cliente é obrigatório no envio das mensagens.', { variant: 'warning', preventDuplicate: true });
+                      enqueueSnackbar('Use {nome} para personalizar sua mensagem.', { variant: 'info', preventDuplicate: true });
+                      return;
+                    }
+
                     const confirmed = window.confirm('Essa mensagem vai ser enviada para todos os clientes na sua base de dados!');
                     if (!confirmed) return;
                     submitFunction(values);

@@ -1,12 +1,8 @@
 import ApiService from './ApiService';
 
 class InteractionsApi extends ApiService {
-  async getAllChats({ startChat, finishChat, sender }) {
-    const { data } = await this.service.post('interactions/chats', {
-      startChat,
-      finishChat,
-      sender
-    });
+  async getAllChats({ sender }) {
+    const { data } = await this.service.post('interactions/chats/import-leads', { sender });
     return data;
   }
 

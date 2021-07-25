@@ -15,7 +15,7 @@ import {
   // Lock as LockIcon,
   // Settings as SettingsIcon,
   // ShoppingBag as ShoppingBagIcon,
-  User as UserIcon,
+  // User as UserIcon,
   // UserPlus as UserPlusIcon,
   // Send as SendIcon,
   Power as PowerIcon,
@@ -32,11 +32,11 @@ const items = [
     icon: PowerIcon,
     title: 'Enviar em massa'
   },
-  {
-    href: '/app/account',
-    icon: UserIcon,
-    title: 'Minha Conta'
-  },
+  // {
+  //   href: '/app/account',
+  //   icon: UserIcon,
+  //   title: 'Minha Conta'
+  // },
   // {
   //   href: '/app/bot',
   //   icon: PowerIcon,
@@ -113,7 +113,7 @@ const DashboardSidebar = ({ onMobileClose, openMobile }) => {
             width: 64,
             height: 64
           }}
-          to="/app/account"
+          to="/"
         />
         <Typography
           color="textPrimary"

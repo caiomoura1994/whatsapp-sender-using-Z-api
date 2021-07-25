@@ -21,6 +21,7 @@ import BotsApi from 'src/services/BotsApi';
 import DashboardSendMessageModal from 'src/components/DashboardSendMessageModal';
 import InteractionsApi from 'src/services/InteractionsApi';
 import { auth, firestore } from 'src/services/firebase';
+import { dayPeriod, supplant } from 'src/utils';
 
 const SNACK_BAR_OPTIONS = {
   variant: 'info',
@@ -56,7 +57,7 @@ const Dashboard = () => {
   });
   const { subscribe: subscribeBot, unsubscribe: unsubscribeBot } = useSocketEventName(`ready-${user && user.uid}`, (data) => {
     console.log(data);
-    enqueueSnackbar('Bot Conectado com Sucesso!', { ...SNACK_BAR_OPTIONS, variant: 'success' });
+    enqueueSnackbar('Bot Conectado com Sucesso!', { ...SNACK_BAR_OPTIONS, variant: 'success', preventDuplicate: true });
     setIsLoading(false);
     setBotIsConnected(true);
   });
@@ -78,14 +79,13 @@ const Dashboard = () => {
     await Promise.all(contacts.map(async (contact) => {
       console.log(contact.id, propMessage);
       try {
+        const [nome] = contact.name || [''];
         const response = await InteractionsApi.sendTextMessage({
-          message: propMessage,
-          phone: contact.id,
+          message: supplant(propMessage, { nome, 'periodo-dia': dayPeriod() }),
+          phone: contact.id && contact.id.user,
           sender: user.uid
         });
         console.log('response:', response);
-        // status
-        // response
         if (response.status) {
           enqueueSnackbar(`Mensagens enviada para ${contact.name} com sucesso!`, SNACK_BAR_OPTIONS);
         }
@@ -115,7 +115,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (user) {
-      console.log(user.uid);
+      console.log('user.uid', user.uid);
       emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
     }
   }, [user, user.uid]);
