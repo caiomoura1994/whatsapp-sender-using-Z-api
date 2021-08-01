@@ -141,7 +141,7 @@ const Dashboard = () => {
   }, [user]);
 
   useEffect(() => {
-    if (user) {
+    if (user && user.uid) {
       console.log('user.uid', user.uid);
       emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
     }
