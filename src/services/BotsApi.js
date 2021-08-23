@@ -11,6 +11,11 @@ class BotsApi extends ApiService {
     return data;
   }
 
+  async firstChats(sender) {
+    const { data } = await this.service.post('/bots/firstChats', { sender });
+    return data;
+  }
+
   async getQrCodeImage() {
     const { data } = await this.service.get('/bots/getQrCodeImage', {});
     return data;

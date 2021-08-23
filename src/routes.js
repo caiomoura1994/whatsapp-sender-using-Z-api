@@ -40,7 +40,7 @@ const routes = (redirectRoot) => [
       { lazy: true, path: '/', element: <Navigate to={redirectRoot} /> },
       { lazy: true, path: '*', element: <Navigate to="/404" /> },
       { path: '/chats', element: <ChatScreen />, },
-      { path: 'chats/:id', element: <ChatDetail /> },
+      { path: 'chats/:chatId', element: <ChatDetail /> },
     ]
   }
 ];

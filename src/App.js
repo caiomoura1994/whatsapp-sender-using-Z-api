@@ -33,7 +33,7 @@ const App = () => {
   }
   return (
     <SocketProvider
-      uri="https://auto-zap-bot.herokuapp.com"
+      uri="https://localhost:8000"
       reducer={reducer}
       initialState={{}}
     >

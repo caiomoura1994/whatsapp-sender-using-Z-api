@@ -1,15 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import Box from '@material-ui/core/Box';
+import { useParams } from 'react-router';
 
 import ChatFooter from 'src/components/chats/ChatFooter';
 import ChatMenuItem from 'src/components/chats/ChatMenuItem';
 import ChatDetailMessages from 'src/components/chats/ChatDetailMessages';
 import { auth, firestore } from 'src/services/firebase';
+import ChatApi from 'src/services/ChatApi';
 
 export default function ChatDetail() {
+  const paramsProps = useParams();
   const { uid, photoURL } = auth.currentUser;
   const [formValue, setFormValue] = useState('');
+  const [chatDetail, setChatDetail] = useState({});
   const messagesRef = firestore.collection('messages');
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -21,9 +25,17 @@ export default function ChatDetail() {
     });
     setFormValue('');
   };
+  async function initializeChatMessages() {
+    const chatDetailResponse = await ChatApi.getChatDetail(uid, paramsProps.chatId);
+    setChatDetail(chatDetailResponse || {});
+  }
+
+  useEffect(() => {
+    initializeChatMessages();
+  }, [uid, paramsProps]);
 
   return (
-    <>
+    <Box maxWidth="40rem" margin="auto">
       <Box
         top={0}
         left={0}
@@ -31,9 +43,9 @@ export default function ChatDetail() {
         position="sticky"
         boxShadow={3}
       >
-        <ChatMenuItem />
+        <ChatMenuItem {...chatDetail} />
       </Box>
-      <ChatDetailMessages />
+      <ChatDetailMessages messages={chatDetail.messages} />
       <ChatFooter
         onSubmit={sendMessage}
         buttonProps={{
@@ -45,6 +57,6 @@ export default function ChatDetail() {
           onChange: (e) => setFormValue(e.target.value),
         }}
       />
-    </>
+    </Box>
   );
 }
