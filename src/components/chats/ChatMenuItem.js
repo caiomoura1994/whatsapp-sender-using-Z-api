@@ -22,7 +22,7 @@ function ChatMenuItem(props) {
     <>
       <ListItem
         // eslint-disable-next-line no-underscore-dangle
-        onClick={() => navigate(`/chats/${id && id._serialized}`)}
+        onClick={() => navigate(`/app/chats/${id && id._serialized}`)}
         alignItems="flex-start"
         button
         divider
@@ -31,6 +31,7 @@ function ChatMenuItem(props) {
           <Avatar alt={name} src={imageurl || 'https://www.1zoom.me/big2/946/289597-frederika.jpg'} />
         </ListItemAvatar>
         <ListItemText
+          sx={{ overflowWrap: 'break-word' }}
           primary={name}
           secondary={firstMessage && firstMessage.body}
         />

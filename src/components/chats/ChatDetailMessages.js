@@ -1,31 +1,37 @@
+/* eslint-disable no-unused-expressions */
 import React, { useRef, useEffect } from 'react';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
-import { auth, firestore } from 'src/services/firebase';
+import PropTypes from 'prop-types';
+
 import ChatBubble from 'src/components/chats/ChatBubble';
 
-function ChatDetailMessages() {
-  const { uid } = auth.currentUser;
+function ChatDetailMessages({ messages = [{}] }) {
   const dummy = useRef();
-  const messagesRef = firestore.collection('messages');
-  const query = messagesRef.orderBy('createdAt').limit(25);
 
-  const [messages] = useCollectionData(query, { idField: 'id' });
   useEffect(() => {
-    dummy.current.scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      dummy.current && dummy.current.scrollIntoView({ behavior: 'smooth' });
+    }, 300);
   }, [messages]);
 
   return (
     <>
       {messages && messages.map((msg) => (
         <ChatBubble
-          key={msg.id}
-          message={msg}
-          myUid={uid}
+          // eslint-disable-next-line no-underscore-dangle
+          key={msg.id._serialized}
+          message={msg.body || ''}
+          timestamp={msg.timestamp}
+          isFromMe={msg.fromMe}
+          msg={msg}
         />
       ))}
       <span ref={dummy} />
     </>
   );
 }
+
+ChatDetailMessages.propTypes = {
+  messages: PropTypes.arrayOf(PropTypes.object),
+};
 
 export default ChatDetailMessages;

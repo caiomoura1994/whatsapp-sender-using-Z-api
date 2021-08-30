@@ -26,6 +26,8 @@ const routes = (redirectRoot) => [
       { lazy: true, path: 'bot', element: <MessageList /> },
       { lazy: true, path: 'products', element: <ProductList /> },
       { lazy: true, path: 'settings', element: <Settings /> },
+      { path: 'chats', element: <ChatScreen />, },
+      { path: 'chats/:chatId', element: <ChatDetail /> },
       { lazy: true, path: '*', element: <Navigate to="/404" /> }
     ]
   },
@@ -38,9 +40,7 @@ const routes = (redirectRoot) => [
       { lazy: true, path: 'register', element: <Register /> },
       { lazy: true, path: '404', element: <NotFound /> },
       { lazy: true, path: '/', element: <Navigate to={redirectRoot} /> },
-      { lazy: true, path: '*', element: <Navigate to="/404" /> },
-      { path: '/chats', element: <ChatScreen />, },
-      { path: 'chats/:chatId', element: <ChatDetail /> },
+      { lazy: true, path: '*', element: <Navigate to="/404" /> }
     ]
   }
 ];

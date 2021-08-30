@@ -7,6 +7,7 @@ import { useSocketEventName } from 'src/hooks/SocketProvider';
 import BotsApi from 'src/services/BotsApi';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from 'src/services/firebase';
+import { Button, Skeleton } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
   inline: {
@@ -24,7 +25,8 @@ const useStyles = makeStyles(() => ({
 export default function ChatScreen() {
   const classes = useStyles();
   const [user] = useAuthState(auth);
-  const [chats, setChats] = useState([]);
+  const [chats, setChats] = useState(null);
+  const [pagination, setPagination] = useState({});
   const { subscribe, unsubscribe } = useSocketEventName('message', console.log);
   const {
     subscribe: subscribeMessageCreate,
@@ -41,24 +43,47 @@ export default function ChatScreen() {
     return unsubscribeMessageCreate;
   }, []);
 
-  async function initChats() {
-    const response = await BotsApi.firstChats(user.uid);
-    setChats(response.chats);
+  async function getNextChats() {
+    const response = await BotsApi.firstChats({ sender: user.uid, ...pagination });
+    console.log('response:', response);
+    setChats((oldChats) => [...(oldChats || []), ...response.chats]);
+    if (response.chats.length === 0) return;
+    setPagination({ limit: response.limit + 4, offset: response.offset + 4 });
   }
 
   useEffect(() => {
-    initChats();
+    getNextChats();
   }, []);
 
   return (
     <div className={classes.container}>
       <ChatHeader />
       <List>
-        {chats.map((chat) => (
+        {!chats && Array(5).fill('').map((_, skeletonIdx) => (
+          <Skeleton
+            // eslint-disable-next-line react/no-array-index-key
+            key={`skeletonIdx-${skeletonIdx}`}
+            width="100%"
+            height="10vh"
+            sx={{ margin: '0.5rem 0' }}
+          />
+        ))}
+        {chats && chats.map((chat) => (
           <div key={chat.to}>
             <ChatMenuItem showBadge {...chat} />
           </div>
         ))}
+        {Array.isArray(chats) && (
+          <Button
+            onClick={getNextChats}
+            sx={{ marginTop: '2rem' }}
+            fullWidth
+            variant="contained"
+            color="primary"
+          >
+            Ver mais
+          </Button>
+        )}
       </List>
     </div>
   );

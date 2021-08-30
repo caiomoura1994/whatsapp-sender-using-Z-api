@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { experimentalStyled } from '@material-ui/core';
 import MainNavbar from './MainNavbar';
 
@@ -31,17 +31,23 @@ const MainLayoutContent = experimentalStyled('div')({
   overflow: 'auto'
 });
 
-const MainLayout = () => (
-  <MainLayoutRoot>
-    <MainNavbar />
-    <MainLayoutWrapper>
-      <MainLayoutContainer>
-        <MainLayoutContent>
-          <Outlet />
-        </MainLayoutContent>
-      </MainLayoutContainer>
-    </MainLayoutWrapper>
-  </MainLayoutRoot>
-);
+const MainLayout = () => {
+  const { pathname } = useLocation();
+
+  return (
+    <MainLayoutRoot>
+      <MainNavbar
+        showBackButton={pathname.includes('chat')}
+      />
+      <MainLayoutWrapper>
+        <MainLayoutContainer>
+          <MainLayoutContent>
+            <Outlet />
+          </MainLayoutContent>
+        </MainLayoutContainer>
+      </MainLayoutWrapper>
+    </MainLayoutRoot>
+  );
+};
 
 export default MainLayout;

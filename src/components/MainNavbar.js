@@ -8,7 +8,7 @@ const MainNavbar = (props) => (
     {...props}
   >
     <Toolbar sx={{ height: 64 }}>
-      <RouterLink to="/">
+      <RouterLink to={props.showBackButton ? 'app/chats' : '/'}>
         <Logo />
       </RouterLink>
     </Toolbar>

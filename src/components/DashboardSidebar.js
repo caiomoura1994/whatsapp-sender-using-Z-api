@@ -17,9 +17,9 @@ import {
   // ShoppingBag as ShoppingBagIcon,
   // User as UserIcon,
   // UserPlus as UserPlusIcon,
-  // Send as SendIcon,
+  Send as SendIcon,
   Power as PowerIcon,
-  Users as UsersIcon
+  Users as UsersIcon,
 } from 'react-feather';
 import { useAuthState } from 'react-firebase-hooks/auth';
 
@@ -67,11 +67,11 @@ const items = [
   //   icon: UserPlusIcon,
   //   title: 'Register'
   // },
-  // {
-  //   href: '/app/messages',
-  //   icon: SendIcon,
-  //   title: 'Mensagens'
-  // },
+  {
+    href: '/app/chats',
+    icon: SendIcon,
+    title: 'Chat'
+  },
   // {
   //   href: '/404',
   //   icon: AlertCircleIcon,

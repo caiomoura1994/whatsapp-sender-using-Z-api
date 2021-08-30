@@ -11,8 +11,8 @@ class BotsApi extends ApiService {
     return data;
   }
 
-  async firstChats(sender) {
-    const { data } = await this.service.post('/bots/firstChats', { sender });
+  async firstChats({ sender, offset, limit }) {
+    const { data } = await this.service.post('/bots/firstChats', { sender, offset, limit });
     return data;
   }
 
