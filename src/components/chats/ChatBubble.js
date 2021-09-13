@@ -1,5 +1,7 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable react/no-danger */
 /* eslint-disable jsx-a11y/media-has-caption */
-import React from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { Paper, Typography } from '@material-ui/core';
@@ -35,9 +37,10 @@ function ChatBubble({
       {message && (
         <Typography
           variant="body2"
-        >
-          {message}
-        </Typography>
+          dangerouslySetInnerHTML={{
+            __html: message.split('\n').map((i) => (`${i} <br/>`)).join(' ')
+          }}
+        />
       )}
       {isAudioMessage && <audio style={{ width: '100%' }} controls src={attachmentData} />}
       {isImageMessage && <img style={{ width: '100%' }} alt="" src={attachmentData} />}
@@ -61,4 +64,4 @@ ChatBubble.propTypes = {
   msg: PropTypes.object,
 };
 
-export default ChatBubble;
+export default memo(ChatBubble);

@@ -94,6 +94,7 @@ const Dashboard = () => {
     }
     let sended = sendedContacts;
     await Promise.all(contacts.map(async (contact) => {
+      await new Promise((resolve) => setTimeout(resolve, 10000));
       console.log(contact.id, propMessage);
       try {
         const [nome] = contact.name || [''];
