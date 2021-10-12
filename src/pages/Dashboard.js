@@ -52,6 +52,7 @@ const Dashboard = () => {
   } = usePagination(query, { limit: 12 });
 
   const { subscribe, unsubscribe } = useSocketEventName(`qr-${user && user.uid}`, (data) => {
+    console.log('data.src', data.src);
     setQrCodeImage(data.src);
     setIsLoading(false);
   });
@@ -82,8 +83,8 @@ const Dashboard = () => {
     setIsLoading(true);
     const response = await BotsApi.disconnectBot(user.uid);
     setIsLoading(false);
+    setBotIsConnected(false);
     if (response.value) {
-      setBotIsConnected(false);
       emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
     }
   }
@@ -144,7 +145,10 @@ const Dashboard = () => {
   useEffect(() => {
     if (user && user.uid) {
       console.log('user.uid', user.uid);
-      emitCreateSessionBot({ id: user.uid, description: `Bot de ${user.displayName}, ${user.email}` });
+      emitCreateSessionBot({
+        id: user.uid,
+        description: `Bot de ${user.displayName}, ${user.email}`
+      });
     }
   }, [user, user.uid]);
 
@@ -178,25 +182,40 @@ const Dashboard = () => {
           >
             {!isLoading && !botIsConnected && (
               <Card style={{ display: 'flex', padding: '2rem' }}>
-                <CardContent>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    <p>Conectar Whatsapp à instância</p>
-                    <p>Para que seja possível enviar mensagens via API precisamos conectar uma conta do Whatsapp a sua instância. Basta seguir os passos abaixo:</p>
-                    <br />
-                    <p>1. Abra o WhatsApp em seu telefone</p>
-                    <p>2. Toque em Menu  ou Configurações  e selecione WhatsApp Web</p>
-                    <p>3. Aponte seu telefone para esta tela para capturar o código</p>
-                  </Typography>
-                </CardContent>
-                {qrCodeImage && (
-                  <img
-                    src={qrCodeImage}
-                    alt="Paella dish"
-                    width="100%"
-                    style={{
-                      objectFit: 'contain'
+                {qrCodeImage ? (
+                  <>
+                    <CardContent>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        <p>Conectar Whatsapp à instância</p>
+                        <p>Para que seja possível enviar mensagens via API precisamos conectar uma conta do Whatsapp a sua instância. Basta seguir os passos abaixo:</p>
+                        <br />
+                        <p>1. Abra o WhatsApp em seu telefone</p>
+                        <p>2. Toque em Menu  ou Configurações  e selecione WhatsApp Web</p>
+                        <p>3. Aponte seu telefone para esta tela para capturar o código</p>
+                      </Typography>
+                    </CardContent>
+                    <img
+                      src={qrCodeImage}
+                      alt="Paella dish"
+                      width="100%"
+                      style={{
+                        objectFit: 'contain'
+                      }}
+                    />
+                  </>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      emitCreateSessionBot({
+                        id: user.uid,
+                        description: `Bot de ${user.displayName}, ${user.email}`
+                      });
                     }}
-                  />
+                  >
+                    Iniciar Bot
+                  </Button>
                 )}
               </Card>
             )}

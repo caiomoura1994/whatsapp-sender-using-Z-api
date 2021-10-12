@@ -1,5 +1,7 @@
+/* eslint-disable no-mixed-operators */
+/* eslint-disable no-underscore-dangle */
 // import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useContext } from 'react';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
@@ -7,7 +9,7 @@ import {
   Box,
   Card,
   // Checkbox,
-  Grid,
+  // Grid,
   IconButton,
   Table,
   TableBody,
@@ -16,71 +18,40 @@ import {
   TableRow,
   Typography
 } from '@material-ui/core';
-import {
-  NavigateNext as NavgateNextIcon,
-  NavigateBefore as NavigateBeforeIcon
-} from '@material-ui/icons';
+import Pagination from '@material-ui/core/Pagination';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Edit';
-import { usePagination } from 'use-pagination-firestore';
+
 import getInitials from 'src/utils/getInitials';
-import { auth, firestore } from 'src/services/firebase';
-import { useAuthState } from 'react-firebase-hooks/auth';
+import { CustomersContext, useListCustomersActions } from 'src/hooks/CustomersProvider';
+
 import CustomerModal from './CustomerModal';
 
 const CustomerListResults = (rest) => {
-  const [isOpened, setOpen] = useState(false);
-  const [selectedContact, setSelectedContact] = useState({});
-  const [user] = useAuthState(auth);
-  const contactsPath = `users/${user && user.uid}/contacts`;
-  const contactsRef = firestore.collection(contactsPath);
-  const query = contactsRef.orderBy('createdAt');
   const {
-    items: contacts,
-    isLoading,
-    isStart,
-    isEnd,
-    getPrev,
-    getNext,
-  } = usePagination(query, { limit: 12 });
-  const removeContact = async (contact) => {
-    console.log(`${contactsPath}/${contact.id}`);
-    const canDeleteContact = window.confirm(`Tem certeza que quer excluir ${contact.name} | ${contact.phone}`);
-    if (!canDeleteContact) return;
-    await firestore.doc(`${contactsPath}/${contact.id}`).delete();
-  };
-
-  const editContact = async ({
-    name,
-    phone,
-    ...contactProps
-  }) => {
-    if (phone && phone.search('-') !== -1) return;
-    console.log({
-      ...contactProps,
-      createdAt: moment().format('yyyy-MM-DDThh:mm'),
-      name,
-      phone
-    });
-
-    const contactsRefToEdit = firestore.collection(`users/${user.uid}/contacts`);
-    await contactsRefToEdit.doc(phone).set({
-      ...contactProps,
-      createdAt: moment().format('yyyy-MM-DDThh:mm'),
-      name: name || '-',
-      phone,
-    });
-    setOpen(false);
-  };
-
-  const openEditContactModal = async (contact) => {
-    setSelectedContact(contact);
-    setOpen(true);
-  };
+    paginationOnChange,
+    removeContact,
+    editContact,
+    openEditContactModal,
+  } = useListCustomersActions();
+  const {
+    editModalOpened,
+    setEditModalOpened,
+    selectedContact,
+    contactsRequest,
+  } = useContext(CustomersContext);
+  const [
+    { data: contactsResponse, loading: isLoading },
+  ] = contactsRequest;
 
   return (
     <>
-      <CustomerModal submitFunction={editContact} isOpened={isOpened} setOpen={setOpen} defaultValue={selectedContact} />
+      <CustomerModal
+        submitFunction={editContact}
+        isOpened={editModalOpened}
+        setOpen={setEditModalOpened}
+        defaultValue={selectedContact}
+      />
       <Card {...rest}>
         <PerfectScrollbar>
           <Box sx={{ minWidth: 1050 }}>
@@ -116,7 +87,7 @@ const CustomerListResults = (rest) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {isLoading ? 'Carregando ...' : contacts.map((customer) => (
+                {isLoading ? 'Carregando ...' : contactsResponse && contactsResponse.result.map((customer) => (
                   <TableRow
                     hover
                     key={customer.id}
@@ -175,17 +146,14 @@ const CustomerListResults = (rest) => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            pt: 3
+            p: 3
           }}
         >
-          <Grid item container xs={12} justifyContent="flex-end">
-            <IconButton onClick={getPrev} disabled={isStart}>
-              <NavigateBeforeIcon />
-            </IconButton>
-            <IconButton onClick={getNext} disabled={isEnd}>
-              <NavgateNextIcon />
-            </IconButton>
-          </Grid>
+          <Pagination
+            count={contactsResponse && contactsResponse.totalPages || 0}
+            color="primary"
+            onChange={paginationOnChange}
+          />
         </Box>
       </Card>
     </>

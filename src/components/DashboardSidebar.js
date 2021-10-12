@@ -15,9 +15,9 @@ import {
   // Lock as LockIcon,
   // Settings as SettingsIcon,
   // ShoppingBag as ShoppingBagIcon,
-  // User as UserIcon,
+  User as UserIcon,
   // UserPlus as UserPlusIcon,
-  Send as SendIcon,
+  // Send as SendIcon,
   Power as PowerIcon,
   Users as UsersIcon,
 } from 'react-feather';
@@ -28,15 +28,15 @@ import NavItem from './NavItem';
 
 const items = [
   {
+    href: '/app/account',
+    icon: UserIcon,
+    title: 'Minha Conta'
+  },
+  {
     href: '/app/dashboard',
     icon: PowerIcon,
     title: 'Enviar em massa'
   },
-  // {
-  //   href: '/app/account',
-  //   icon: UserIcon,
-  //   title: 'Minha Conta'
-  // },
   // {
   //   href: '/app/bot',
   //   icon: PowerIcon,
@@ -67,11 +67,11 @@ const items = [
   //   icon: UserPlusIcon,
   //   title: 'Register'
   // },
-  {
-    href: '/app/chats',
-    icon: SendIcon,
-    title: 'Chat'
-  },
+  // {
+  //   href: '/app/chats',
+  //   icon: SendIcon,
+  //   title: 'Chat'
+  // },
   // {
   //   href: '/404',
   //   icon: AlertCircleIcon,

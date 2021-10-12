@@ -21,7 +21,7 @@ const Login = () => {
   const signInWithGoogle = async () => {
     const provider = new firebaseInstance.auth.GoogleAuthProvider();
     await auth.signInWithPopup(provider);
-    navigate('/app/dashboard', { replace: true });
+    navigate('/app/account', { replace: true });
   };
 
   return (
@@ -49,7 +49,7 @@ const Login = () => {
               password: Yup.string().max(255).required('Password is required')
             })}
             onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
+              navigate('/app/account', { replace: true });
             }}
           >
             {({

@@ -21,7 +21,7 @@ const reducer = (state, action) => {
 
 const App = () => {
   const [user, isLoading] = useAuthState(auth);
-  const activedRoutes = user ? '/app/dashboard' : '/login';
+  const activedRoutes = user ? '/app/account' : '/login';
   const routing = useRoutes(routes(activedRoutes));
 
   if (isLoading) {

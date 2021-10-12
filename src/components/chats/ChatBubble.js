@@ -14,6 +14,7 @@ function ChatBubble({
   msg = {}
 }) {
   console.log(msg);
+  console.log(moment().unix(timestamp * 1000));
   let attachmentData = '';
   const isAudioMessage = msg.type === 'ptt';
   if (isAudioMessage) attachmentData = `data:audio/ogg;codecs=opus;base64,${msg.attachmentData}`;
@@ -51,7 +52,7 @@ function ChatBubble({
         variant="body2"
         textAlign={isFromMe ? 'end' : 'start'}
       >
-        {moment(timestamp).format('DD/MM/YYYY hh:mm a')}
+        {moment(timestamp * 1000).format('DD/MM/YYYY HH:mm')}
       </Typography>
     </Paper>
   );
