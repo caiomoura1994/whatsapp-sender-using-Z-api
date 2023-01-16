@@ -5,13 +5,13 @@ import 'firebase/auth';
 import 'firebase/functions';
 
 const firebaseConfigCredentials = {
-  apiKey: 'AIzaSyB3PQKerykXWe7kRIyJhZ3sMVqqmHYU1sc',
-  authDomain: 'zapei-chat.firebaseapp.com',
-  projectId: 'zapei-chat',
-  storageBucket: 'zapei-chat.appspot.com',
-  messagingSenderId: '281169463444',
-  appId: '1:281169463444:web:69c79667974b6e8c154c81',
-  measurementId: 'G-QWNDKEKQFW'
+  apiKey: process.env.apiKey,
+  authDomain: process.env.authDomain,
+  projectId: process.env.projectId,
+  storageBucket: process.env.storageBucket,
+  messagingSenderId: process.env.messagingSenderId,
+  appId: process.env.appId,
+  measurementId: process.env.measurementId,
 };
 
 firebase.initializeApp(firebaseConfigCredentials);
